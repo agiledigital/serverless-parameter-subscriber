@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "lib": [
+      "es2017",
+      "esnext.asynciterable"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": ".build",
+    "paths": {
+      "test/*": [
+        "test/*"
+      ],
+      "~/*": [
+        "src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "configFile": "./tslint.json",
+        "name": "typescript-tslint-plugin"
+      }
+    ],
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017"
+  },
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
+}
