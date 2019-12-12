@@ -6,7 +6,7 @@
   },
   "homepage": "https://github.com/agiledigital/serverless-parameter-subscriber#readme",
   "name": "@agiledigital/serverless-param-subscriber",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "serverless plugin to make allow Lambdas to included dynamically updated parameters from the paramter store.",
   "scripts": {
     "test": "jest",
