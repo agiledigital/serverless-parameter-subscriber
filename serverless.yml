@@ -10,6 +10,7 @@ provider:
       Action:
         - ssm:GetParameter
         - ssm:GetParametersByPath
+        - lambda:GetFunctionConfiguration
         - lambda:UpdateFunctionConfiguration
       Resource: "*"
 

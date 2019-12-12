@@ -1,4 +1,5 @@
 import { SSM, Lambda } from 'aws-sdk';
+import { ParameterList } from 'aws-sdk/clients/ssm';
 
 interface CloudWatchRuleEvent {
   detail: {
@@ -26,27 +27,57 @@ const subscriberParameterPath = (paramName: string) => `/subscriber/${paramName}
  * The environment variable to update is specified in the subscriber parameter value.
  * @param updatedParamValue the value of the updated parameter.
  */
-const updateLambdaFunctions = (updatedParamValue: string) => async (parameter: SSM.Parameter) => {
+const updateLambdaFunctions = (updatedParamValue: string) => async (acc: Promise<string[]>, parameter: SSM.Parameter) => {
   console.log(`Processing [${parameter.Name}] with value [${parameter.Value}].`)
 
+  const previous = await acc;
+
   if (parameter.Value === undefined) {
-    return Promise.resolve('Not updating as no subscriber parameter value found.');
+    return Promise.resolve([...previous, 'Not updating as no subscriber parameter value found.']);
   }
 
   const subscriberParamValue: SubscriberParamValue = JSON.parse(parameter.Value);
-  
+
   console.log(`Updating Lambda Function [${subscriberParamValue.lambda}] environment variable [${subscriberParamValue.environment}].`);
+
+  const lambdaFunctionConfig = await lambda.getFunctionConfiguration({
+    FunctionName: subscriberParamValue.lambda
+  }).promise();
 
   await lambda.updateFunctionConfiguration({
     FunctionName: subscriberParamValue.lambda,
     Environment: {
       Variables: {
+        ...lambdaFunctionConfig.Environment?.Variables,
         [subscriberParamValue.environment]: updatedParamValue
       }
     }
   }).promise();
 
-  return `Lambda Function [${subscriberParamValue.lambda}] has been updated.`;
+  return [...previous, `Lambda Function [${subscriberParamValue.lambda}] has been updated.`];
+};
+
+/**
+ * Fetches the SSM parameters by its path.
+ * @param subscriberParamPath subscriber parameter's path of the updated parameter.
+ * @param nextToken for fetching next batch of parameters.
+ */
+const fetchParametersByPath = async (subscriberParamPath: string, nextToken?: string): Promise<ParameterList> => {
+  const parameterResult = await ssm.getParametersByPath({ 
+    Path: subscriberParamPath,
+    NextToken: nextToken,
+    Recursive: true
+  }).promise();
+
+  const parameters = parameterResult.Parameters || [];
+
+  if (parameterResult.NextToken === undefined) {
+    return parameters;
+  }
+  else {
+    const nextBatchParams = await fetchParametersByPath(subscriberParamPath, parameterResult.NextToken);
+    return [...parameters, ...nextBatchParams];
+  }
 }
 
 /**
@@ -77,13 +108,10 @@ module.exports.parameterSubscriber = async (event: CloudWatchRuleEvent) => {
     const updatedParamValue = updatedParamValueResult.Parameter?.Value || '';
 
     if (operation === 'Update' || operation === 'Create') {
-      const parameterResult = await ssm.getParametersByPath({ 
-        Path: subscriberParamPath,
-        Recursive: true
-      }).promise();
+      const parameters = await fetchParametersByPath(subscriberParamPath);
 
-      if (parameterResult.Parameters !== undefined) {
-        const updateResults = await Promise.all(parameterResult.Parameters.map(updateLambdaFunctions(updatedParamValue)));
+      if (parameters !== []) {
+        const updateResults = await parameters.reduce(updateLambdaFunctions(updatedParamValue), Promise.resolve([]));
 
         console.log(updateResults.join('\n'));
       }
