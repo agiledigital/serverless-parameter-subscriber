@@ -6,13 +6,13 @@
   },
   "homepage": "https://github.com/agiledigital/serverless-parameter-subscriber#readme",
   "name": "@agiledigital/serverless-param-subscriber",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "serverless plugin to make allow Lambdas to included dynamically updated parameters from the paramter store.",
   "scripts": {
     "test": "jest",
     "build": "tsc --build && zip lambda/subscriber.zip .build/src/handler.js",
     "format": "prettier --write '{src,test}/**/*.{js,ts,tsx}'",
-    "pre-commit": "npm run test",
+    "pre-commit": "yarn test",
     "release": "yarn build && yarn publish"
   },
   "repository": {
@@ -38,7 +38,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run pre-commit"
+      "pre-commit": "yarn pre-commit"
     }
   },
   "publishConfig": {
