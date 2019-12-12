@@ -1,13 +1,48 @@
 {
-  "name": "serverless-param-subscriber",
-  "scripts": {},
-  "version": "1.0.0",
+  "author": "agileDigital",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agiledigital/serverless-parameter-subscriber/issues"
+  },
+  "homepage": "https://github.com/agiledigital/serverless-parameter-subscriber#readme",
+  "name": "@agiledigital/serverless-param-subscriber",
+  "version": "0.1.0",
+  "description": "serverless plugin to make allow Lambdas to included dynamically updated parameters from the paramter store.",
+  "scripts": {
+    "test": "jest --clearCache && jest --runInBand",
+    "build": "tsc --build",
+    "pre-commit": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agiledigital/serverless-parameter-subscriber.git"
+  },
+  "keywords": [
+    "serverless",
+    "sls",
+    "ssm",
+    "parameterstore",
+    "aws",
+    "lambda"
+  ],
   "devDependencies": {
     "@types/aws-lambda": "^8.10.37",
+    "@types/jest": "^24.0.23",
     "aws-sdk": "^2.588.0",
-    "lodash": "^4.17.15",
+    "husky": "^3.1.0",
+    "prettier": "^1.19.1",
     "serverless-plugin-typescript": "^1.1.9",
-    "serverless-pseudo-parameters": "^2.5.0",
     "typescript": "^3.7.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run pre-commit"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "jest": "^24.9.0"
   }
 }
