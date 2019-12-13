@@ -1,5 +1,8 @@
 ## serverless-parameter-subscriber
 
+[![CircleCI](https://circleci.com/gh/agiledigital/serverless-parameter-subscriber.svg?style=svg)](https://circleci.com/gh/agiledigital/serverless-parameter-subscriber)
+[![npm version](https://badge.fury.io/js/%40agiledigital%2Fserverless-parameter-subscriber.svg)](https://badge.fury.io/js/%40agiledigital%2Fserverless-parameter-subscriber)
+
 Not working yet!
 
 Processes the SSM parameter change event so that the dependent Lambda Function
