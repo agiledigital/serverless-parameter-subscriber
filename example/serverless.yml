@@ -35,4 +35,4 @@ resources:
         Value: hello, dave
 
 plugins:
-  - '@agiledigital/serverless-param-subscriber'
+  - '@agiledigital/serverless-parameter-subscriber'
