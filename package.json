@@ -7,12 +7,12 @@
   "main": "lib/serverless-sns-sqs-lambda.js",
   "homepage": "https://github.com/agiledigital/serverless-parameter-subscriber#readme",
   "name": "@agiledigital/serverless-param-subscriber",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "serverless plugin to make allow Lambdas to included dynamically updated parameters from the paramter store.",
   "scripts": {
     "test": "jest",
-    "build": "tsc --build && zip lambda/subscriber.zip .build/src/handler.js",
-    "format": "prettier --write '{src,test}/**/*.{js,ts,tsx}'",
+    "build": "tsc --build && zip lambda/subscriber.zip .build/lib/handler.js",
+    "format": "prettier --write '{lib,test}/**/*.{js,ts,tsx}'",
     "pre-commit": "yarn test",
     "release": "yarn build && yarn publish"
   },
