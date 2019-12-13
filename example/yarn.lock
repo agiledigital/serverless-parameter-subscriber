@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@agiledigital/serverless-param-subscriber@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@agiledigital/serverless-param-subscriber/-/serverless-param-subscriber-0.0.8.tgz#07a6d4ba2686e6f5a72278d23185ee4adf103f5b"
-  integrity sha512-9W69XHQD0IstYhYsTNupk/oxWPokevf2UIxj9NSGBLkBcmJmrj8qlJ4BWoig4jKKH3xjPWfdTcEFvS0B8xqYzA==
+"@agiledigital/serverless-parameter-subscriber@^0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@agiledigital/serverless-parameter-subscriber/-/serverless-parameter-subscriber-0.0.11.tgz#12ccc16a17ba7fa5d59ddbcb6bdfe52e0318ec43"
+  integrity sha512-P2cI9BGqx0mBdtB7Ebtq0RFwfqrBvY63VN3ib77seGwcEKOT7mhJxshI58gExcZ2tKHOqrUIj2kGLoy/qkqKVw==
