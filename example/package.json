@@ -4,6 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@agiledigital/serverless-parameter-subscriber": "^0.0.11"
+    "@agiledigital/serverless-parameter-subscriber": "^0.1.1"
   }
 }
