@@ -1,5 +1,5 @@
 import { Lambda, SSM } from 'aws-sdk';
-import { ParameterList } from 'aws-sdk/clients/ssm';
+import { Parameter } from 'aws-sdk/clients/ssm';
 
 interface CloudWatchRuleEvent {
   detail: {
@@ -43,6 +43,31 @@ const synchronously = <T, U>(func: (arg: T) => Promise<U> | U) => (
     return [...acc, result];
   }, Promise.resolve([]));
 
+interface ItemPage<T> {
+  readonly position?: string;
+  readonly items?: readonly T[];
+}
+
+/**
+ * Some AWS endpoints will return a list of items and a position indicator from
+ * which you can fetch more items. This is a utility function to fetch all items
+ * from that endpoint.
+ *
+ * @param fetch function used to fetch items from a certain position
+ * @param previousPosition the position returned by the previous request
+ */
+export const allFromPaged = async <T>(
+  fetch: (position?: string) => Promise<ItemPage<T>>,
+  previousPosition?: string
+): Promise<readonly T[]> => {
+  const { position, items } = await fetch(previousPosition);
+  const itemArray = items === undefined ? [] : items;
+
+  return position === undefined || position === null
+    ? itemArray
+    : itemArray.concat(await allFromPaged(fetch, position));
+};
+
 /**
  * Updates the Lambda Functions environment variables value to the updated
  * parameter value. The environment variable to update is specified in the
@@ -51,7 +76,7 @@ const synchronously = <T, U>(func: (arg: T) => Promise<U> | U) => (
  * @param updatedParamValue the value of the updated parameter.
  */
 const updateLambdaFunctions = (updatedParamValue: string) => async (
-  parameter: SSM.Parameter
+  parameter: Parameter
 ): Promise<string> => {
   console.log(
     `Processing [${parameter.Name}] with value [${parameter.Value}].`
@@ -92,32 +117,27 @@ const updateLambdaFunctions = (updatedParamValue: string) => async (
 
 /**
  * Fetches the SSM parameters by its path.
- * @param subscriberParamPath subscriber parameter's path of the updated parameter.
- * @param nextToken for fetching next batch of parameters.
+ *
+ * @param subscriberParamPath subscriber parameter's path for the updated parameter.
+ * @returns a list of subscriber parameters for an updated parameter
  */
 const fetchParametersByPath = async (
-  subscriberParamPath: string,
-  nextToken?: string
-): Promise<ParameterList> => {
-  const parameterResult = await ssm
-    .getParametersByPath({
-      Path: subscriberParamPath,
-      NextToken: nextToken,
-      Recursive: true,
-    })
-    .promise();
+  subscriberParamPath: string
+): Promise<ReadonlyArray<Parameter>> => {
+  return allFromPaged<Parameter>(async (nextToken?: string) => {
+    const { Parameters, NextToken } = await ssm
+      .getParametersByPath({
+        Path: subscriberParamPath,
+        NextToken: nextToken,
+        Recursive: true,
+      })
+      .promise();
 
-  const parameters = parameterResult.Parameters ?? [];
-
-  if (parameterResult.NextToken === undefined) {
-    return parameters;
-  } else {
-    const nextBatchParams = await fetchParametersByPath(
-      subscriberParamPath,
-      parameterResult.NextToken
-    );
-    return [...parameters, ...nextBatchParams];
-  }
+    return {
+      items: Parameters,
+      position: NextToken,
+    };
+  });
 };
 
 /**
@@ -136,6 +156,9 @@ const fetchParametersByPath = async (
  * and this Lambda will update the MY_ENV environment variable based on the
  * change event from myParam. Search of what function to update is done based
  * on the subscriber parameter key path: /subscriber/myParam.
+ *
+ * @param event the CloudWatch Parameter update event
+ * @returns promise resolving when the event has been handled.
  */
 module.exports.handler = async (event: CloudWatchRuleEvent) => {
   const updatedParamName = event.detail.name;
