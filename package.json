@@ -14,7 +14,8 @@
     "build": "tsc --build && zip lambda/subscriber.zip .build/lib/handler.js",
     "format": "prettier --write '{lib,test}/**/*.{js,ts,tsx}'",
     "pre-commit": "yarn test",
-    "release": "yarn build && yarn publish"
+    "release": "yarn build && yarn publish",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -29,18 +30,23 @@
     "lambda"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-angular": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
     "@types/aws-lambda": "^8.10.37",
     "@types/jest": "^24.0.23",
     "aws-sdk": "^2.588.0",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
+    "semantic-release": "^15.13.31",
     "serverless-plugin-typescript": "^1.1.9",
     "typescript": "^3.7.3"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn pre-commit"
+      "pre-commit": "yarn pre-commit",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "publishConfig": {
