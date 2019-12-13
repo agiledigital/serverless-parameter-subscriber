@@ -13,4 +13,4 @@ jobs:
           command: yarn build
       - run:
           name: release
-          command: yarn semantic-release || true
+          command: yarn semantic-release
