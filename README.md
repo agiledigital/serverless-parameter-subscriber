@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/agiledigital/serverless-parameter-subscriber.svg?style=svg)](https://circleci.com/gh/agiledigital/serverless-parameter-subscriber)
 [![npm version](https://badge.fury.io/js/%40agiledigital%2Fserverless-parameter-subscriber.svg)](https://badge.fury.io/js/%40agiledigital%2Fserverless-parameter-subscriber)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 So you have a configuration value that you need to make available in multiple
 different Lambdas. You can add it as an environment variable in each Lambda but
@@ -11,7 +12,7 @@ called, adding to the latency. You can cache it locally but you need to think
 about timeouts so that a perpetually warm Lambda will eventually get updated
 when a value changes.
 
-It's a complicated!
+It's complicated!
 
 Now you have _serverless-parameter-subscriber_. Keep your parameters stored in
 the parameter store and use them like environment variables from your Lambdas.
