@@ -21,14 +21,7 @@
     "type": "git",
     "url": "git+https://github.com/agiledigital/serverless-parameter-subscriber.git"
   },
-  "keywords": [
-    "serverless",
-    "sls",
-    "ssm",
-    "parameterstore",
-    "aws",
-    "lambda"
-  ],
+  "keywords": ["serverless", "sls", "ssm", "parameterstore", "aws", "lambda"],
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
@@ -41,7 +34,6 @@
     "jest": "^25.2.4",
     "prettier": "^2.0.2",
     "semantic-release": "^17.0.4",
-    "serverless-plugin-typescript": "^1.1.9",
     "typescript": "^3.8.3"
   },
   "husky": {
